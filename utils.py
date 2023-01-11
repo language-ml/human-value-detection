@@ -46,3 +46,14 @@ def evaluate(name, y_pred, y_true):
         plt.savefig(os.path.join(name,f'Confusion_{class_dict[c]}.png'))
 
     return df
+
+def get_emb(name, text):
+    if name=='tf-idf':
+        all_text = np.concatenate([text['train'], text['test']])
+        vectorizer = TfidfVectorizer()
+        emb = vectorizer.fit_transform(all_text)
+        return emb[:text['train'].shape[0]], emb[text['train'].shape[0]:]
+    elif name=='labse':
+        labse_model = SentenceTransformer('sentence-transformers/LaBSE')
+        emb = labse_model.encode(text)
+        return emb
